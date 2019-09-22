@@ -3,9 +3,10 @@
 - Install dependencies with `composer install`.
 - Copy `.env.dist` to `.env` and adjust values or set the corresponding environment variables in another way.
 - Add any URL you need in `config/routes.php`.
-
 - If you need groups from Brave Core to secure routes, see `Bootstrap::enableRoutes()`,
 enable the appropriate middlewares and configure your roles in `config/security.php`.
+
+See https://www.slimframework.com/docs/v4/start/web-servers.html for how to set up a web server.
 
 ## Changelog
 
