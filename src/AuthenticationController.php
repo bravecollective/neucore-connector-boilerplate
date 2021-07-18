@@ -1,4 +1,5 @@
 <?php
+
 namespace Brave\CoreConnector;
 
 use Brave\Sso\Basics\SessionHandlerInterface;
@@ -28,13 +29,10 @@ class AuthenticationController extends \Brave\Sso\Basics\AuthenticationControlle
     /**
      * EVE SSO callback.
      * 
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
      * @param bool $ssoV2
-     * @return ResponseInterface
      * @throws Exception
      */
-    public function auth(ServerRequestInterface $request, ResponseInterface $response, $ssoV2 = false)
+    public function auth(ServerRequestInterface $request, ResponseInterface $response, $ssoV2 = false): ResponseInterface
     {
         #parent::auth($request, $response); // SSO v1
         parent::auth($request, $response, true); // SSO v2
@@ -43,7 +41,7 @@ class AuthenticationController extends \Brave\Sso\Basics\AuthenticationControlle
         return $response->withHeader('Location', '/');
     }
     
-    public function logout(ServerRequestInterface $request, ResponseInterface $response)
+    public function logout(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $this->sessionHandler->set('eveAuth', null);
         $this->roleProvider->clear();

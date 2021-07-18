@@ -1,4 +1,5 @@
 <?php
+
 namespace Brave\CoreConnector;
 
 use Brave\NeucoreApi\Api\ApplicationApi;
@@ -28,10 +29,6 @@ class RoleProvider implements RoleProviderInterface
      */
     private $session;
 
-    /**
-     * @param ApplicationApi $api
-     * @param SessionHandlerInterface $session
-     */
     public function __construct(ApplicationApi $api, SessionHandlerInterface $session)
     {
         $this->api = $api;
@@ -39,7 +36,6 @@ class RoleProvider implements RoleProviderInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
      * @return string[]
      */
     public function getRoles(ServerRequestInterface $request = null): array
@@ -81,7 +77,7 @@ class RoleProvider implements RoleProviderInterface
         return $roles;
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->session->set('coreGroups', null);
     }

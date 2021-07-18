@@ -1,4 +1,5 @@
 <?php
+
 namespace Brave\CoreConnector;
 
 use DI\ContainerBuilder;
@@ -9,9 +10,6 @@ use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Middleware\Session;
 
-/**
- *
- */
 class Bootstrap
 {
     /**
@@ -20,7 +18,6 @@ class Bootstrap
     protected $container;
 
     /**
-     * Bootstrap constructor
      * @throws Exception
      */
     public function __construct()
@@ -36,10 +33,9 @@ class Bootstrap
     }
 
     /**
-     * @return App
      * @throws ContainerExceptionInterface
      */
-    public function enableRoutes()
+    public function enableRoutes(): App
     {
         /** @var App $app */
         $routesConfigurator = require_once(ROOT_DIR . '/config/routes.php');

@@ -15,19 +15,16 @@ use Slim\Psr7\Factory\ResponseFactory;
 return [
     'settings' => require_once('config.php'),
 
-    App::class => function (ContainerInterface $container)
-    {
+    App::class => function (ContainerInterface $container) {
         AppFactory::setContainer($container);
         return AppFactory::create();
     },
 
-    ResponseFactoryInterface::class => function ()
-    {
+    ResponseFactoryInterface::class => function () {
         return new ResponseFactory();
     },
 
-    GenericProvider::class => function (ContainerInterface $container)
-    {
+    GenericProvider::class => function (ContainerInterface $container) {
         $settings = $container->get('settings');
 
         return new GenericProvider([
@@ -50,18 +47,15 @@ return [
         );
     },
 
-    SessionHandler::class => function (ContainerInterface $container)
-    {
+    SessionHandler::class => function (ContainerInterface $container) {
         return new SessionHandler($container);
     },
 
-    SessionHandlerInterface::class => function (ContainerInterface $container)
-    {
+    SessionHandlerInterface::class => function (ContainerInterface $container) {
         return $container->get(SessionHandler::class);
     },
 
-    ApplicationApi::class => function (ContainerInterface $container)
-    {
+    ApplicationApi::class => function (ContainerInterface $container) {
         $apiKey = base64_encode(
             $container->get('settings')['CORE_APP_ID'] .
             ':'.
@@ -73,8 +67,7 @@ return [
         return new ApplicationApi(null, $config);
     },
 
-    RoleProvider::class => function (ContainerInterface $container)
-    {
+    RoleProvider::class => function (ContainerInterface $container) {
         return new RoleProvider(
             $container->get(ApplicationApi::class),
             $container->get(SessionHandlerInterface::class)

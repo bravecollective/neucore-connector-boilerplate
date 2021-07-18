@@ -1,4 +1,5 @@
 <?php
+
 namespace Brave\CoreConnector;
 
 use Brave\Sso\Basics\EveAuthentication;
@@ -19,13 +20,7 @@ class HomeController
         $this->eveAuth = $sessionHandler->get('eveAuth');
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param $args
-     * @return ResponseInterface
-     */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $response->getBody()->write(str_replace(
             '{{name}}',
