@@ -77,6 +77,12 @@ class RoleProvider implements RoleProviderInterface
         return $roles;
     }
 
+    public function getCachedRoles(): array
+    {
+        $coreGroups = $this->session->get('coreGroups');
+        return $coreGroups['roles'] ?? [];
+    }
+
     public function clear(): void
     {
         $this->session->set('coreGroups', null);

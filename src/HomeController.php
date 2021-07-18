@@ -15,17 +15,27 @@ class HomeController
      */
     private $eveAuth;
 
+    /**
+     * @var RoleProvider
+     */
+    private $roleProvider;
+
     public function __construct(ContainerInterface $container) {
         $sessionHandler = $container->get(SessionHandlerInterface::class);
         $this->eveAuth = $sessionHandler->get('eveAuth');
+        $this->roleProvider = $container->get(RoleProvider::class);
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $response->getBody()->write(str_replace(
-            '{{name}}',
-            $this->eveAuth ? $this->eveAuth->getCharacterName() : '',
-            '7o {{name}}<br>
+            ['{{name}}', '{{roles}}'],
+            [
+                $this->eveAuth ? $this->eveAuth->getCharacterName() : '',
+                implode(', ', $this->roleProvider->getCachedRoles())
+            ],
+            '7o {{name}} <br>
+                (roles: {{roles}})<br>
                 <br>
                 <a href="/login">login</a><br>
                 <a href="/secured">secured</a> (only works if middleware is enabled in Bootstrap class)<br>
