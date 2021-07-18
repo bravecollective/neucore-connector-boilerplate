@@ -1,7 +1,7 @@
 <?php
 
 use Brave\CoreConnector\RoleProvider;
-use Brave\NeucoreApi\Api\ApplicationApi;
+use Brave\NeucoreApi\Api\ApplicationGroupsApi;
 use Brave\Sso\Basics\AuthenticationProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Psr\Container\ContainerInterface;
@@ -50,7 +50,7 @@ return [
         return new Helper();
     },
 
-    ApplicationApi::class => function (ContainerInterface $container) {
+    ApplicationGroupsApi::class => function (ContainerInterface $container) {
         $apiKey = base64_encode(
             $container->get('settings')['CORE_APP_ID'] .
             ':'.
@@ -59,12 +59,12 @@ return [
         $config = Brave\NeucoreApi\Configuration::getDefaultConfiguration();
         $config->setHost($container->get('settings')['CORE_URL']);
         $config->setAccessToken($apiKey);
-        return new ApplicationApi(null, $config);
+        return new ApplicationGroupsApi(null, $config);
     },
 
     RoleProvider::class => function (ContainerInterface $container) {
         return new RoleProvider(
-            $container->get(ApplicationApi::class),
+            $container->get(ApplicationGroupsApi::class),
             $container->get(Helper::class)
         );
     }

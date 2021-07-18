@@ -10,6 +10,10 @@ See https://www.slimframework.com/docs/v4/start/web-servers.html for how to set 
 
 ## Changelog
 
+### 4.0.0
+
+- Raised minimum PHP version to 7.3.
+
 ### 3.0.0
 
 Preconfigured for

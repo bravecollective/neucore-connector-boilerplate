@@ -23,7 +23,7 @@ class Bootstrap
     public function __construct()
     {
         if (is_readable(ROOT_DIR . '/.env')) {
-            $dotEnv = new Dotenv(ROOT_DIR);
+            $dotEnv = Dotenv::createUnsafeImmutable(ROOT_DIR);
             $dotEnv->load();
         }
 

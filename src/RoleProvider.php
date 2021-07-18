@@ -2,7 +2,7 @@
 
 namespace Brave\CoreConnector;
 
-use Brave\NeucoreApi\Api\ApplicationApi;
+use Brave\NeucoreApi\Api\ApplicationGroupsApi;
 use Brave\NeucoreApi\ApiException;
 use Brave\Sso\Basics\EveAuthentication;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,7 +20,7 @@ class RoleProvider implements RoleProviderInterface
     const ROLE_ANY = 'role:any';
 
     /**
-     * @var ApplicationApi
+     * @var ApplicationGroupsApi
      */
     private $api;
 
@@ -29,7 +29,7 @@ class RoleProvider implements RoleProviderInterface
      */
     private $session;
 
-    public function __construct(ApplicationApi $api, Helper $session)
+    public function __construct(ApplicationGroupsApi $api, Helper $session)
     {
         $this->api = $api;
         $this->session = $session;
