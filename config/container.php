@@ -1,16 +1,15 @@
 <?php
 
 use Brave\CoreConnector\RoleProvider;
-use Brave\CoreConnector\SessionHandler;
 use Brave\NeucoreApi\Api\ApplicationApi;
 use Brave\Sso\Basics\AuthenticationProvider;
-use Brave\Sso\Basics\SessionHandlerInterface;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Factory\ResponseFactory;
+use SlimSession\Helper;
 
 return [
     'settings' => require_once('config.php'),
@@ -47,12 +46,8 @@ return [
         );
     },
 
-    SessionHandler::class => function (ContainerInterface $container) {
-        return new SessionHandler($container);
-    },
-
-    SessionHandlerInterface::class => function (ContainerInterface $container) {
-        return $container->get(SessionHandler::class);
+    Helper::class => function () {
+        return new Helper();
     },
 
     ApplicationApi::class => function (ContainerInterface $container) {
@@ -70,7 +65,7 @@ return [
     RoleProvider::class => function (ContainerInterface $container) {
         return new RoleProvider(
             $container->get(ApplicationApi::class),
-            $container->get(SessionHandlerInterface::class)
+            $container->get(Helper::class)
         );
     }
 ];

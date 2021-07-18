@@ -3,10 +3,10 @@
 namespace Brave\CoreConnector;
 
 use Brave\Sso\Basics\EveAuthentication;
-use Brave\Sso\Basics\SessionHandlerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SlimSession\Helper;
 
 class HomeController
 {
@@ -21,7 +21,7 @@ class HomeController
     private $roleProvider;
 
     public function __construct(ContainerInterface $container) {
-        $sessionHandler = $container->get(SessionHandlerInterface::class);
+        $sessionHandler = $container->get(Helper::class);
         $this->eveAuth = $sessionHandler->get('eveAuth');
         $this->roleProvider = $container->get(RoleProvider::class);
     }

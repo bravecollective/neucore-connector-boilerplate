@@ -14,7 +14,7 @@ return function (ContainerInterface $container)
     });
 
     // SSO via sso-basics package
-    $app->get('/login', 'Brave\Sso\Basics\AuthenticationController:index');
+    $app->get('/login', 'Brave\CoreConnector\AuthenticationController:index');
     $app->get('/auth', 'Brave\CoreConnector\AuthenticationController:auth');
     $app->get('/logout', 'Brave\CoreConnector\AuthenticationController:logout');
 
