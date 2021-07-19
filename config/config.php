@@ -18,7 +18,4 @@ return [
     'CORE_URL' => getenv('CORE_URL'),
     'CORE_APP_ID' => getenv('CORE_APP_ID'),
     'CORE_APP_TOKEN' => getenv('CORE_APP_TOKEN'),
-
-    // DB
-    'DB_URL' => getenv('DB_URL')
 ];
