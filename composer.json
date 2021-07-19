@@ -9,8 +9,7 @@
     },
     "require": {
         "php": "^7.3",
-        "bravecollective/neucore-api": "^1.4",
-        "bravecollective/sso-basics": "^3.0",
+        "bravecollective/neucore-api": "^1.22.1",
         "bravecollective/web-ui": "*@dev",
         "bryanjhv/slim-session": "^4.0",
         "doctrine/dbal": "^2.5",
@@ -18,6 +17,7 @@
         "php-di/php-di": "^6.0",
         "slim/psr7": "^1.4",
         "slim/slim": "^4.2",
+        "tkhamez/eve-sso": "^2.0",
         "tkhamez/slim-role-auth": "^3.0",
         "vlucas/phpdotenv": "^5.3"
     },

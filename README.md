@@ -13,6 +13,7 @@ See https://www.slimframework.com/docs/v4/start/web-servers.html for how to set 
 ### 4.0.0
 
 - Raised minimum PHP version to 7.3.
+- Replaced bravecollective/sso-basics with tkhamez/eve-sso.
 
 ### 3.0.0
 

@@ -2,12 +2,13 @@
 
 namespace Brave\CoreConnector;
 
-use Brave\Sso\Basics\AuthenticationProvider;
+use Eve\Sso\AuthenticationProvider;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SlimSession\Helper;
+use UnexpectedValueException;
 
 class AuthenticationController
 {
@@ -35,7 +36,7 @@ class AuthenticationController
         $this->roleProvider = $container->get(RoleProvider::class);
         $this->sessionHandler = $container->get(Helper::class);
         $this->settings = $container->get('settings');
-        $this->authProvider = $container->get(AuthenticationProvider::class);;
+        $this->authProvider = $container->get(AuthenticationProvider::class);
     }
 
     /**
@@ -87,7 +88,7 @@ class AuthenticationController
         try {
             #$eveAuth = $this->authProvider->validateAuthentication($state, $sessionState, $code); // SSO v1
             $eveAuth = $this->authProvider->validateAuthenticationV2($state, $sessionState, $code); // SSO v2
-        } catch(\UnexpectedValueException $e) {
+        } catch(UnexpectedValueException $e) {
             $response->getBody()->write($e->getMessage());
             return $response;
         }

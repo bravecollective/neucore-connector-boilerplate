@@ -2,7 +2,7 @@
 
 use Brave\CoreConnector\RoleProvider;
 use Brave\NeucoreApi\Api\ApplicationGroupsApi;
-use Brave\Sso\Basics\AuthenticationProvider;
+use Eve\Sso\AuthenticationProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;

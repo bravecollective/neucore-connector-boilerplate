@@ -4,7 +4,7 @@ namespace Brave\CoreConnector;
 
 use Brave\NeucoreApi\Api\ApplicationGroupsApi;
 use Brave\NeucoreApi\ApiException;
-use Brave\Sso\Basics\EveAuthentication;
+use Eve\Sso\EveAuthentication;
 use Psr\Http\Message\ServerRequestInterface;
 use SlimSession\Helper;
 use Tkhamez\Slim\RoleAuth\RoleProviderInterface;
@@ -43,13 +43,13 @@ class RoleProvider implements RoleProviderInterface
         $roles = [self::ROLE_ANY];
 
         /* @var EveAuthentication $eveAuth */
-        $eveAuth = $this->session->get('eveAuth', null);
+        $eveAuth = $this->session->get('eveAuth');
         if ($eveAuth === null) {
             return $roles;
         }
 
         // try cache
-        $coreGroups = $this->session->get('coreGroups', null);
+        $coreGroups = $this->session->get('coreGroups');
         if (is_array($coreGroups) && $coreGroups['time'] > (time() - 60*60)) {
             return $coreGroups['roles'];
         }
