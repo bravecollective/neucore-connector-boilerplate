@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  boilerplate_php:
+    container_name: boilerplate_php
+    build:
+      context: config
+      dockerfile: dockerfile-php8
+    volumes: [".:/app"]
+    working_dir: /app
+    networks: [boilerplate]
+  boilerplate_http:
+    container_name: boilerplate_http
+    image: nginx:1
+    depends_on: [boilerplate_php]
+    volumes: [".:/app", "./config/docker-nginx.conf:/etc/nginx/conf.d/default.conf"]
+    ports: ["8000:80"]
+    networks: [boilerplate]
+
+networks:
+  boilerplate:
+    #external:
+    #  name: neucore_network # provided by https://github.com/tkhamez/neucore
