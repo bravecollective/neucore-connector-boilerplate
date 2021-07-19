@@ -8,7 +8,7 @@
         }
     },
     "require": {
-        "php": "^7.3",
+        "php": "^7.3|^8.0",
         "bravecollective/neucore-api": "^1.22.1",
         "bravecollective/web-ui": "*@dev",
         "bryanjhv/slim-session": "^4.0",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9da62383ca2f2e1bdfc8512903658814",
+    "content-hash": "150e3de38a358ca69779dae5e66e80b2",
     "packages": [
         {
             "name": "bravecollective/neucore-api",
@@ -2888,7 +2888,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3"
+        "php": "^7.3|^8.0"
     },
     "platform-dev": [],
     "platform-overrides": {
