@@ -57,6 +57,8 @@ class RoleProvider implements RoleProviderInterface
         // get groups from Core
         try {
             $groups = $this->api->groupsV2($eveAuth->getCharacterId());
+            // If you need groups based on corporation membership for characters that were not added
+            // to Core, use https://account.bravecollective.com/api.html#/Application/groupsWithFallbackV1
         } catch (ApiException $ae) {
             // Don't log "404 Character not found." error from Core.
             if ($ae->getCode() !== 404 || strpos($ae->getMessage(), 'Character not found.') === false) {
