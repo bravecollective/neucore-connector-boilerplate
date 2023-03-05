@@ -20,4 +20,4 @@ services:
 networks:
   boilerplate:
     #external:
-    #  name: neucore_network # provided by https://github.com/tkhamez/neucore
+    #  name: neucore_dev # provided by https://github.com/tkhamez/neucore

@@ -19,15 +19,9 @@ class RoleProvider implements RoleProviderInterface
      */
     const ROLE_ANY = 'role:any';
 
-    /**
-     * @var ApplicationGroupsApi
-     */
-    private $api;
+    private ApplicationGroupsApi $api;
 
-    /**
-     * @var Helper
-     */
-    private $session;
+    private Helper $session;
 
     public function __construct(ApplicationGroupsApi $api, Helper $session)
     {
@@ -42,10 +36,10 @@ class RoleProvider implements RoleProviderInterface
     {
         $roles = [self::ROLE_ANY];
 
-        /* @var EveAuthentication $eveAuth */
+        /* @var ?EveAuthentication $eveAuth */
         $eveAuth = $this->session->get('eveAuth');
         if ($eveAuth === null) {
-            return $roles;
+            return $this->cacheRoles($roles);
         }
 
         // try cache
@@ -61,22 +55,16 @@ class RoleProvider implements RoleProviderInterface
             // to Core, use https://account.bravecollective.com/api.html#/Application/groupsWithFallbackV1
         } catch (ApiException $ae) {
             // Don't log "404 Character not found." error from Core.
-            if ($ae->getCode() !== 404 || strpos($ae->getMessage(), 'Character not found.') === false) {
+            if ($ae->getCode() !== 404 || !str_contains($ae->getMessage(), 'Character not found.')) {
                 error_log((string)$ae);
             }
-            return $roles;
+            return $this->cacheRoles($roles, -1);
         }
         foreach ($groups as $group) {
-            $roles[] = $group->getName();
+            $roles[] = 'core:' . $group->getName();
         }
 
-        // cache roles
-        $this->session->set('coreGroups', [
-            'time' => time(),
-            'roles' => $roles
-        ]);
-
-        return $roles;
+        return $this->cacheRoles($roles);
     }
 
     public function getCachedRoles(): array
@@ -85,8 +73,17 @@ class RoleProvider implements RoleProviderInterface
         return $coreGroups['roles'] ?? [];
     }
 
-    public function clear(): void
+    public function clearCache(): void
     {
         $this->session->set('coreGroups', null);
+    }
+
+    private function cacheRoles(array $roles, int $expires = null): array
+    {
+        $this->session->set('coreGroups', [
+            'time' => $expires ?: time(),
+            'roles' => $roles
+        ]);
+        return $roles;
     }
 }

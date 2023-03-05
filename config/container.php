@@ -3,7 +3,6 @@
 use Brave\CoreConnector\RoleProvider;
 use Brave\NeucoreApi\Api\ApplicationGroupsApi;
 use Eve\Sso\AuthenticationProvider;
-use League\OAuth2\Client\Provider\GenericProvider;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
@@ -23,26 +22,21 @@ return [
         return new ResponseFactory();
     },
 
-    GenericProvider::class => function (ContainerInterface $container) {
-        $settings = $container->get('settings');
-
-        return new GenericProvider([
-            'clientId' => $settings['SSO_CLIENT_ID'],
-            'clientSecret' => $settings['SSO_CLIENT_SECRET'],
-            'redirectUri' => $settings['SSO_REDIRECTURI'],
-            'urlAuthorize' => $settings['SSO_URL_AUTHORIZE'],
-            'urlAccessToken' => $settings['SSO_URL_ACCESSTOKEN'],
-            'urlResourceOwnerDetails' => $settings['SSO_URL_RESOURCEOWNERDETAILS'],
-        ]);
-    },
-
     AuthenticationProvider::class => function (ContainerInterface $container) {
         $settings = $container->get('settings');
 
         return new AuthenticationProvider(
-            $container->get(GenericProvider::class),
+            [
+                'clientId' => $settings['SSO_CLIENT_ID'],
+                'clientSecret' => $settings['SSO_CLIENT_SECRET'],
+                'redirectUri' => $settings['SSO_REDIRECT_URI'],
+                'urlAuthorize' => $settings['SSO_URL_AUTHORIZE'],
+                'urlAccessToken' => $settings['SSO_URL_ACCESS_TOKEN'],
+                'urlResourceOwnerDetails' => $settings['SSO_URL_RESOURCE_OWNER_DETAILS'],
+                'urlKeySet' => $settings['SSO_URL_JWT_KEY_SET'],
+                'urlRevoke' => $settings['SSO_URL_REVOKE_URL'],
+            ],
             explode(' ', $settings['SSO_SCOPES']),
-            $settings['SSO_URL_JWT_KEY_SET']
         );
     },
 
@@ -54,7 +48,7 @@ return [
         $apiKey = base64_encode(
             $container->get('settings')['CORE_APP_ID'] .
             ':'.
-            $container->get('settings')['CORE_APP_TOKEN']
+            $container->get('settings')['CORE_APP_SECRET']
         );
         $config = Brave\NeucoreApi\Configuration::getDefaultConfiguration();
         $config->setHost($container->get('settings')['CORE_URL']);

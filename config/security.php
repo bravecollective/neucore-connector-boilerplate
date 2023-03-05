@@ -5,5 +5,5 @@
  * First route match will be used, matched by "starts-with"
  */
 return [
-    '/secured' => ['group1', 'group2'],
+    '/secured' => ['core:admin', 'core:group2'],
 ];

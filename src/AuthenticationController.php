@@ -4,7 +4,9 @@ namespace Brave\CoreConnector;
 
 use Eve\Sso\AuthenticationProvider;
 use Exception;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SlimSession\Helper;
@@ -12,26 +14,18 @@ use UnexpectedValueException;
 
 class AuthenticationController
 {
-    /**
-     * @var RoleProvider
-     */
-    private $roleProvider;
+    private RoleProvider $roleProvider;
+
+    private Helper $sessionHandler;
+
+    private mixed $settings;
+
+    private AuthenticationProvider $authProvider;
 
     /**
-     * @var Helper
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
      */
-    private $sessionHandler;
-
-    /**
-     * @var mixed
-     */
-    private $settings;
-
-    /**
-     * @var AuthenticationProvider
-     */
-    private $authProvider;
-
     public function __construct(ContainerInterface $container) {
         $this->roleProvider = $container->get(RoleProvider::class);
         $this->sessionHandler = $container->get(Helper::class);
@@ -43,6 +37,7 @@ class AuthenticationController
      * Show the login page.
      *
      * @throws Exception
+     * @noinspection PhpUnusedParameterInspection
      */
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -86,7 +81,6 @@ class AuthenticationController
         $sessionState = $this->sessionHandler->get('ssoState');
 
         try {
-            #$eveAuth = $this->authProvider->validateAuthentication($state, $sessionState, $code); // SSO v1
             $eveAuth = $this->authProvider->validateAuthenticationV2($state, $sessionState, $code); // SSO v2
         } catch(UnexpectedValueException $e) {
             $response->getBody()->write($e->getMessage());
@@ -94,15 +88,16 @@ class AuthenticationController
         }
 
         $this->sessionHandler->set('eveAuth', $eveAuth);
-        $this->roleProvider->clear();
+        $this->roleProvider->clearCache();
 
         return $response->withHeader('Location', '/');
     }
-    
+
+    /** @noinspection PhpUnusedParameterInspection */
     public function logout(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $this->sessionHandler->set('eveAuth', null);
-        $this->roleProvider->clear();
+        $this->roleProvider->clearCache();
         
         return $response->withHeader('Location', '/');
     }

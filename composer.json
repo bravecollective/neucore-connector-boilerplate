@@ -1,5 +1,5 @@
 {
-    "name": "bravecollective/core-connector",
+    "name": "bravecollective/neucore-connector-boilerplate",
     "type": "project",
     "license": "MIT",
     "autoload": {
@@ -8,23 +8,19 @@
         }
     },
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^8.0",
         "bravecollective/neucore-api": "^1.22.1",
-        "bravecollective/web-ui": "*@dev",
         "bryanjhv/slim-session": "^4.0",
-        "doctrine/dbal": "^2.5",
-        "frontpack/composer-assets-plugin": "^0.11.1",
-        "php-di/php-di": "^6.0",
+        "php-di/php-di": "^7.0",
         "slim/psr7": "^1.4",
         "slim/slim": "^4.2",
-        "tkhamez/eve-sso": "^2.0",
-        "tkhamez/slim-role-auth": "^3.0",
+        "tkhamez/eve-sso": "^3.0",
+        "tkhamez/slim-role-auth": "^4.0",
         "vlucas/phpdotenv": "^5.3"
     },
     "config": {
-        "assets-dir": "web/assets",
         "platform": {
-            "php": "7.3"
+            "php": "8.0"
         },
         "sort-packages": true
     }

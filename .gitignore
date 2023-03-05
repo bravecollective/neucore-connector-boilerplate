@@ -1,5 +1,4 @@
-.env
-vendor
-web/assets
+/.env
+/vendor
 
 /.idea

@@ -3,23 +3,23 @@
 namespace Brave\CoreConnector;
 
 use Eve\Sso\EveAuthentication;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SlimSession\Helper;
 
 class HomeController
 {
-    /**
-     * @var EveAuthentication|null
-     */
-    private $eveAuth;
+    private ?EveAuthentication $eveAuth;
+
+    private RoleProvider $roleProvider;
 
     /**
-     * @var RoleProvider
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private $roleProvider;
-
     public function __construct(ContainerInterface $container) {
         $sessionHandler = $container->get(Helper::class);
         $this->eveAuth = $sessionHandler->get('eveAuth');
@@ -28,19 +28,16 @@ class HomeController
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $response->getBody()->write(str_replace(
+        $templateCode = file_get_contents(__DIR__ . '/../html/index.html');
+        $body = str_replace(
             ['{{name}}', '{{roles}}'],
             [
-                $this->eveAuth ? $this->eveAuth->getCharacterName() : '',
+                $this->eveAuth ? $this->eveAuth->getCharacterName() : '(not logged in)',
                 implode(', ', $this->roleProvider->getCachedRoles())
             ],
-            '7o {{name}} <br>
-                (roles: {{roles}})<br>
-                <br>
-                <a href="/login">login</a><br>
-                <a href="/secured">secured</a> (only works if middleware is enabled in Bootstrap class)<br>
-                <a href="/logout">logout</a>'
-        ));
+            $templateCode
+        );
+        $response->getBody()->write($body);
 
         return $response;
     }

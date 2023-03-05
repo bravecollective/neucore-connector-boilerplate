@@ -1,12 +1,16 @@
 # Neucore connector boilerplate example 
 
+## Requirements
+
+- An EVE app (https://developers.eveonline.com).
+- A Neucore installation (https://github.com/tkhamez/neucore).
+
 ## Install
 
 - Install dependencies with `composer install`.
 - Copy `.env.dist` to `.env` and adjust values or set the corresponding environment variables in another way.
 - Add any URL you need in `config/routes.php`.
-- If you need groups from Brave Core to secure routes, see `Bootstrap::enableRoutes()`,
-enable the appropriate middlewares and configure your roles in `config/security.php`.
+- Configure your roles to secure routes in `config/security.php`.
 
 See https://www.slimframework.com/docs/v4/start/web-servers.html for how to set up a web server.
 
@@ -27,6 +31,12 @@ docker logs -f --details boilerplate_php
 ```
 
 ## Changelog
+
+### 5.0.0
+
+- Raised minimum PHP version to 8.0.
+- Removed Bootstrap library.
+- Activated middleware for Neucore groups.
 
 ### 4.0.0
 

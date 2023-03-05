@@ -3,19 +3,22 @@
 namespace Brave\CoreConnector;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Dotenv\Dotenv;
 use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
 use Slim\Middleware\Session;
+use Tkhamez\Slim\RoleAuth\RoleMiddleware;
+use Tkhamez\Slim\RoleAuth\SecureRouteMiddleware;
 
 class Bootstrap
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    private ContainerInterface $container;
 
     /**
      * @throws Exception
@@ -35,21 +38,53 @@ class Bootstrap
     /**
      * @throws ContainerExceptionInterface
      */
-    public function enableRoutes(): App
+    public function run(): void
     {
-        /** @var App $app */
-        $routesConfigurator = require_once(ROOT_DIR . '/config/routes.php');
-        $app = $routesConfigurator($this->container);
+        $app = $this->container->get(App::class);
+        $this->addRoutes($app);
+        $this->addMiddleware($app);
+        $app->run();
+    }
 
-        // uncomment this if you need groups from Neucore to secure routes
-        /*
-         $app->add(new \Tkhamez\Slim\RoleAuth\SecureRouteMiddleware(
-            $this->container->get(\Psr\Http\Message\ResponseFactoryInterface::class), 
-            include ROOT_DIR . '/config/security.php')
-        );
-        $app->add(new \Tkhamez\Slim\RoleAuth\RoleMiddleware($this->container->get(RoleProvider::class)));
-        */
-        
+    private function addRoutes(App $app): void
+    {
+        $routes = include ROOT_DIR . '/config/routes.php';
+
+        foreach ($routes as $pattern => $config) {
+            foreach ($config as $method => $callable) {
+                switch ($method) {
+                    case 'GET':
+                        $app->get($pattern, $callable);
+                        break;
+                    case 'POST':
+                        $app->post($pattern, $callable);
+                        break;
+                    case 'DELETE':
+                        $app->delete($pattern, $callable);
+                        break;
+                    case 'PUT':
+                        $app->put($pattern, $callable);
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws NotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws DependencyException
+     */
+    private function addMiddleware(App $app): void
+    {
+        $app->add(new SecureRouteMiddleware(
+            $this->container->get(ResponseFactoryInterface::class),
+            include ROOT_DIR . '/config/security.php',
+            ['redirect_url' => '/login']
+        ));
+        $app->add(new RoleMiddleware($this->container->get(RoleProvider::class)));
+
         $app->add(new Session([
             'name' => 'brave_service',
             'autorefresh' => true,
@@ -58,7 +93,5 @@ class Bootstrap
 
         // Add routing middleware last, so the `route` attribute from `$request` is available
         $app->addRoutingMiddleware();
-        
-        return $app;
     }
 }

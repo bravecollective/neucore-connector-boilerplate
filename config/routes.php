@@ -1,22 +1,20 @@
 <?php
 
-use Psr\Container\ContainerInterface;
-use Slim\App;
+use Brave\CoreConnector\AuthenticationController;
+use Brave\CoreConnector\HomeController;
+use Slim\Psr7\Factory\ResponseFactory;
 
-return function (ContainerInterface $container)
-{
-    /** @var App $app */
-    $app = $container->get(App::class);
+return [
+    '/' => ['GET' => HomeController::class],
 
-    $app->get('/', 'Brave\CoreConnector\HomeController');
-    $app->get('/secured', function () {
-        echo 'secured';
-    });
+    '/secured' => ['GET' => function () {
+        $response = (new ResponseFactory())->createResponse();
+        $response->getBody()->write('secured<br><a href="/">back</a>');
+        return $response;
+    }],
 
-    // SSO via sso-basics package
-    $app->get('/login', 'Brave\CoreConnector\AuthenticationController:index');
-    $app->get('/auth', 'Brave\CoreConnector\AuthenticationController:auth');
-    $app->get('/logout', 'Brave\CoreConnector\AuthenticationController:logout');
-
-    return $app;
-};
+    // SSO via eve-sso package
+    '/login'  => ['GET' => [AuthenticationController::class, 'index']],
+    '/auth'   => ['GET' => [AuthenticationController::class, 'auth']],
+    '/logout' => ['GET' => [AuthenticationController::class, 'logout']],
+];
