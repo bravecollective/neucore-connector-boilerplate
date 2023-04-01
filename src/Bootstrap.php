@@ -30,8 +30,11 @@ class Bootstrap
             $dotEnv->load();
         }
 
+        $config = include ROOT_DIR . '/config/config.php';
+        $containerDefinition = Container::getDefinition($config);
+
         $builder = new ContainerBuilder();
-        $builder->addDefinitions(require_once(ROOT_DIR . '/config/container.php'));
+        $builder->addDefinitions($containerDefinition);
         $this->container = $builder->build();
     }
 
