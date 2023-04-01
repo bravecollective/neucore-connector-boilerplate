@@ -70,18 +70,18 @@ class AuthenticationController
     public function auth(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $queryParameters = $request->getQueryParams();
+        $sessionState = $this->sessionHandler->get('ssoState');
 
-        if (!isset($queryParameters['code']) || !isset($queryParameters['state'])) {
+        if (empty($queryParameters['code']) || empty($queryParameters['state']) || empty($sessionState)) {
             $response->getBody()->write('Invalid SSO state, please try again.');
             return $response;
         }
 
         $state = $queryParameters['state'];
         $code = $queryParameters['code'];
-        $sessionState = $this->sessionHandler->get('ssoState');
 
         try {
-            $eveAuth = $this->authProvider->validateAuthenticationV2($state, $sessionState, $code); // SSO v2
+            $eveAuth = $this->authProvider->validateAuthenticationV2($state, $sessionState, $code);
         } catch(UnexpectedValueException $e) {
             $response->getBody()->write($e->getMessage());
             return $response;
