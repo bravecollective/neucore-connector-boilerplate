@@ -32,8 +32,8 @@ class HomeController
         $body = str_replace(
             ['{{name}}', '{{roles}}'],
             [
-                $this->eveAuth ? $this->eveAuth->getCharacterName() : '(not logged in)',
-                implode(', ', $this->roleProvider->getCachedRoles())
+                htmlspecialchars($this->eveAuth ? $this->eveAuth->getCharacterName() : '(not logged in)'),
+                htmlspecialchars(implode(', ', $this->roleProvider->getCachedRoles()))
             ],
             $templateCode
         );

@@ -53,7 +53,7 @@ class AuthenticationController
             '{{serviceName}}',
             '{{loginUrl}}'
         ], [
-            $serviceName,
+            htmlspecialchars($serviceName),
             $loginUrl
         ], $templateCode);
 
